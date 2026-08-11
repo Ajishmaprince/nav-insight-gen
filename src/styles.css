@@ -112,9 +112,7 @@
   font-size: 0.875rem;
   color: var(--foreground);
   outline: none;
-}
 
-@utility field {
   &:focus {
     border-color: var(--ring);
     box-shadow: 0 0 0 3px oklch(0.79 0.16 178 / 0.18);
