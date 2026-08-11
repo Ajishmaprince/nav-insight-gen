@@ -64,11 +64,11 @@ export function CongestionChart({ routes }: { routes: ScoredRoute[] }) {
   return (
     <div className="rounded-xl border border-border bg-card p-5">
       <h3 className="text-sm font-medium">Congestion score by route</h3>
-      <div className="mt-6 flex h-44 items-end gap-6">
+      <div className="mt-6 flex items-end gap-6">
         {routes.map((r) => (
           <div key={r.id} className="flex flex-1 flex-col items-center gap-2">
             <span className="font-mono text-xs text-muted-foreground">{r.score}</span>
-            <div className="flex w-full flex-1 items-end">
+            <div className="flex h-32 w-full items-end">
               <div
                 className={`w-full rounded-t-md ${BAR_CLASS[r.level]} transition-all duration-700`}
                 style={{ height: `${Math.max(6, r.score)}%` }}
