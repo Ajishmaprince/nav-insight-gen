@@ -95,7 +95,9 @@ export function validateQuery(q: Query, data: TrafficData | null) {
   if (!/^\d{2}:\d{2}$/.test(q.time)) {
     errors.time = "Enter a valid time (HH:MM).";
   } else {
-    const [h, m] = q.time.split(":").map(Number);
+    const parts = q.time.split(":").map(Number);
+    const h = parts[0] ?? 99;
+    const m = parts[1] ?? 99;
     if (h > 23 || m > 59) errors.time = "Time must be between 00:00 and 23:59.";
   }
   if (!/^\d{4}-\d{2}-\d{2}$/.test(q.date) || Number.isNaN(Date.parse(q.date)))
