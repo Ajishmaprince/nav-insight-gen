@@ -81,7 +81,7 @@ export function CongestionChart({ routes }: { routes: ScoredRoute[] }) {
         ))}
       </div>
       <div className="mt-4 flex flex-wrap gap-4 border-t border-border pt-3 text-[11px] text-muted-foreground">
-        <Legend cls="bg-low" label="Low (&lt;40)" />
+        <Legend cls="bg-low" label="Low (under 40)" />
         <Legend cls="bg-medium" label="Medium (40–69)" />
         <Legend cls="bg-high" label="High (70+)" />
       </div>
@@ -93,7 +93,7 @@ function Legend({ cls, label }: { cls: string; label: string }) {
   return (
     <span className="flex items-center gap-1.5">
       <span className={`size-2.5 rounded-full ${cls}`} />
-      <span dangerouslySetInnerHTML={{ __html: label }} />
+      <span>{label}</span>
     </span>
   );
 }
