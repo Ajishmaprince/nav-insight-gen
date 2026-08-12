@@ -2,6 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useMemo, useState } from "react";
 
+import { SiteFooter } from "@/components/site/SiteFooter";
+import { SiteHeader } from "@/components/site/SiteHeader";
 import { CongestionChart, RouteCard } from "@/components/traffic/RouteCard";
 import { FeedbackPanel } from "@/components/traffic/FeedbackPanel";
 import { getRouteAdvice, type RouteAdvice } from "@/lib/advice.functions";
@@ -117,200 +119,328 @@ function Index() {
   }
 
   return (
-    <main className="mx-auto w-full max-w-6xl px-5 py-10 sm:px-8 lg:py-16">
-      <header className="max-w-2xl">
-        <span className="inline-flex items-center gap-2 rounded-full border border-primary/40 bg-primary/10 px-3 py-1 text-xs font-medium tracking-wide text-primary uppercase">
-          Traffic intelligence
-        </span>
-        <h1 className="mt-5 text-4xl leading-[1.05] font-semibold tracking-tight sm:text-5xl">
-          TraffIQ — predict congestion, pick the smarter route.
-        </h1>
-        <p className="mt-4 text-base text-muted-foreground">
-          A congestion model trained offline runs entirely in your browser from{" "}
-          <code className="font-mono text-primary">traffic_data.json</code>. Alternate routes
-          are scored, colour-coded, and explained in plain language by AI.
-        </p>
-      </header>
+    <div id="top">
+      <SiteHeader />
 
-      <div className="mt-10 grid gap-6 lg:grid-cols-[380px_1fr]">
-        <form onSubmit={onSubmit} className="panel h-fit p-6" noValidate>
-          <h2 className="text-lg font-medium">Plan a trip</h2>
+      <main>
+        {/* Hero */}
+        <section className="border-b border-border/70">
+          <div className="mx-auto w-full max-w-6xl px-5 py-16 sm:px-8 lg:py-24">
+            <div className="grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+              <div>
+                <span className="inline-flex items-center gap-2 rounded-full border border-primary/40 bg-primary/10 px-3 py-1 text-xs font-medium tracking-wide text-primary uppercase">
+                  Traffic intelligence platform
+                </span>
+                <h1 className="mt-6 text-4xl leading-[1.05] font-semibold tracking-tight sm:text-5xl lg:text-6xl">
+                  Know the traffic
+                  <br />
+                  before you leave.
+                </h1>
+                <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+                  TraffIQ scores every alternate route for your trip using a congestion model
+                  trained offline and executed entirely in your browser — then explains the
+                  smartest choice in one short paragraph.
+                </p>
+                <div className="mt-8 flex flex-wrap items-center gap-3">
+                  <a
+                    href="#forecast"
+                    className="rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+                  >
+                    Forecast my route
+                  </a>
+                  <a
+                    href="#how-it-works"
+                    className="rounded-xl border border-border bg-secondary px-5 py-3 text-sm font-semibold text-secondary-foreground transition-colors hover:border-primary/50 hover:text-primary"
+                  >
+                    See how it works
+                  </a>
+                </div>
+              </div>
 
-          <div className="mt-5 space-y-4">
-            <Field label="Origin" error={errors.origin}>
-              <select
-                value={form.origin}
-                onChange={(e) => setForm({ ...form, origin: e.target.value })}
-                className="field"
-              >
-                {destinations.map((l) => (
-                  <option key={l} value={l}>
-                    {l}
-                  </option>
+              <dl className="grid grid-cols-2 gap-4">
+                {[
+                  { k: "3", v: "Alternate routes scored per trip" },
+                  { k: "0 ms", v: "Server round-trips for scoring" },
+                  { k: "24 × 7", v: "Hour and weekday factors modelled" },
+                  { k: "5", v: "Weather conditions accounted for" },
+                ].map((s) => (
+                  <div key={s.v} className="panel p-5">
+                    <dt className="font-mono text-2xl leading-none text-primary">{s.k}</dt>
+                    <dd className="mt-2 text-xs leading-relaxed text-muted-foreground">{s.v}</dd>
+                  </div>
                 ))}
-              </select>
-            </Field>
-
-            <Field label="Destination" error={errors.destination}>
-              <select
-                value={form.destination}
-                onChange={(e) => setForm({ ...form, destination: e.target.value })}
-                className="field"
-              >
-                {destinations.map((l) => (
-                  <option key={l} value={l}>
-                    {l}
-                  </option>
-                ))}
-              </select>
-            </Field>
-
-            <div className="grid grid-cols-2 gap-3">
-              <Field label="Travel date" error={errors.date}>
-                <input
-                  type="date"
-                  value={form.date}
-                  onChange={(e) => setForm({ ...form, date: e.target.value })}
-                  className="field"
-                />
-              </Field>
-              <Field label="Departure" error={errors.time}>
-                <input
-                  type="time"
-                  value={form.time}
-                  onChange={(e) => setForm({ ...form, time: e.target.value })}
-                  className="field"
-                />
-              </Field>
+              </dl>
             </div>
-
-            <Field label="Weather">
-              <select
-                value={form.weather}
-                onChange={(e) => setForm({ ...form, weather: e.target.value as Weather })}
-                className="field"
-              >
-                {WEATHERS.map((w) => (
-                  <option key={w} value={w}>
-                    {w[0]?.toUpperCase() + w.slice(1)}
-                  </option>
-                ))}
-              </select>
-            </Field>
-
-            <label className="flex cursor-pointer items-center gap-2.5 text-sm text-muted-foreground">
-              <input
-                type="checkbox"
-                checked={form.holiday}
-                onChange={(e) => setForm({ ...form, holiday: e.target.checked })}
-                className="size-4 accent-[var(--primary)]"
-              />
-              Public holiday
-            </label>
           </div>
+        </section>
 
-          <button
-            type="submit"
-            disabled={!data}
-            className="mt-6 w-full rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-50"
-          >
-            {data ? "Predict congestion" : "Loading model…"}
-          </button>
+        {/* Forecast */}
+        <section id="forecast" className="mx-auto w-full max-w-6xl px-5 py-16 sm:px-8 lg:py-20">
+          <SectionHeading
+            eyebrow="Route forecast"
+            title="Plan a trip and compare every option"
+            description="Set your departure details on the left. Scores range from 0 to 100, where lower means freer-flowing traffic."
+          />
 
-          {loadError && <p className="mt-3 text-xs text-destructive">{loadError}</p>}
-          {data && (
-            <p className="mt-4 text-[11px] leading-relaxed text-muted-foreground">
-              Model {data.meta.version} · {data.meta.model}
-              <br />
-              Source: {data.meta.source}
-            </p>
-          )}
-        </form>
+          <div className="mt-10 grid gap-6 lg:grid-cols-[380px_1fr]">
+            <form onSubmit={onSubmit} className="panel h-fit p-6" noValidate>
+              <h3 className="text-base font-medium">Trip details</h3>
 
-        <section className="space-y-6">
-          {!routes && (
-            <div className="panel flex min-h-64 flex-col items-center justify-center p-10 text-center">
-              <p className="text-sm text-muted-foreground">
-                Pick an origin, destination and departure time to score up to three alternate
-                routes.
-              </p>
-            </div>
-          )}
+              <div className="mt-5 space-y-4">
+                <Field label="Origin" error={errors.origin}>
+                  <select
+                    value={form.origin}
+                    onChange={(e) => setForm({ ...form, origin: e.target.value })}
+                    className="field"
+                  >
+                    {destinations.map((l) => (
+                      <option key={l} value={l}>
+                        {l}
+                      </option>
+                    ))}
+                  </select>
+                </Field>
 
-          {routes && submitted && (
-            <>
-              <div className="panel p-6">
-                <div className="flex flex-wrap items-baseline justify-between gap-2">
-                  <h2 className="text-lg font-medium">
-                    {submitted.origin} → {submitted.destination}
-                  </h2>
-                  <p className="text-xs text-muted-foreground">
-                    {submitted.date} at {submitted.time} · {submitted.weather}
-                    {submitted.holiday ? " · holiday" : ""}
+                <Field label="Destination" error={errors.destination}>
+                  <select
+                    value={form.destination}
+                    onChange={(e) => setForm({ ...form, destination: e.target.value })}
+                    className="field"
+                  >
+                    {destinations.map((l) => (
+                      <option key={l} value={l}>
+                        {l}
+                      </option>
+                    ))}
+                  </select>
+                </Field>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <Field label="Travel date" error={errors.date}>
+                    <input
+                      type="date"
+                      value={form.date}
+                      onChange={(e) => setForm({ ...form, date: e.target.value })}
+                      className="field"
+                    />
+                  </Field>
+                  <Field label="Departure" error={errors.time}>
+                    <input
+                      type="time"
+                      value={form.time}
+                      onChange={(e) => setForm({ ...form, time: e.target.value })}
+                      className="field"
+                    />
+                  </Field>
+                </div>
+
+                <Field label="Weather">
+                  <select
+                    value={form.weather}
+                    onChange={(e) => setForm({ ...form, weather: e.target.value as Weather })}
+                    className="field"
+                  >
+                    {WEATHERS.map((w) => (
+                      <option key={w} value={w}>
+                        {w[0]?.toUpperCase() + w.slice(1)}
+                      </option>
+                    ))}
+                  </select>
+                </Field>
+
+                <label className="flex cursor-pointer items-center gap-2.5 text-sm text-muted-foreground">
+                  <input
+                    type="checkbox"
+                    checked={form.holiday}
+                    onChange={(e) => setForm({ ...form, holiday: e.target.checked })}
+                    className="size-4 accent-[var(--primary)]"
+                  />
+                  Public holiday
+                </label>
+              </div>
+
+              <button
+                type="submit"
+                disabled={!data}
+                className="mt-6 w-full rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-50"
+              >
+                {data ? "Predict congestion" : "Loading model…"}
+              </button>
+
+              {loadError && <p className="mt-3 text-xs text-destructive">{loadError}</p>}
+              {data && (
+                <p className="mt-4 border-t border-border pt-4 text-[11px] leading-relaxed text-muted-foreground">
+                  Model {data.meta.version} · {data.meta.model}
+                  <br />
+                  Source: {data.meta.source}
+                </p>
+              )}
+            </form>
+
+            <div className="space-y-6">
+              {!routes && (
+                <div className="panel flex min-h-72 flex-col items-center justify-center p-10 text-center">
+                  <span className="grid size-11 place-items-center rounded-xl bg-primary/10 ring-1 ring-primary/30">
+                    <svg
+                      viewBox="0 0 24 24"
+                      className="size-5 text-primary"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.8"
+                      strokeLinecap="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M3 17h4l3-10 4 14 3-8h4" />
+                    </svg>
+                  </span>
+                  <p className="mt-4 max-w-sm text-sm text-muted-foreground">
+                    Choose an origin, destination and departure time to score up to three
+                    alternate routes side by side.
                   </p>
                 </div>
+              )}
 
-                <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-                  {routes.map((r) => (
-                    <RouteCard key={r.id} route={r} recommended={r.name === recommendedName} />
-                  ))}
-                </div>
-              </div>
-
-              <div className="grid gap-6 lg:grid-cols-2">
-                <div className="panel p-6">
-                  <div className="flex items-center justify-between gap-3">
-                    <h2 className="text-lg font-medium">AI recommendation</h2>
-                    {advice && (
-                      <span className="rounded-full border border-border px-2 py-0.5 text-[11px] text-muted-foreground">
-                        {advice.source === "ai" ? "Lovable AI" : "Local fallback"}
-                      </span>
-                    )}
-                  </div>
-
-                  {thinking && (
-                    <p className="mt-4 animate-pulse text-sm text-muted-foreground">
-                      Analysing routes…
-                    </p>
-                  )}
-
-                  {advice && (
-                    <div className="mt-4 space-y-4">
-                      <p className="text-base leading-relaxed">{advice.summary}</p>
-                      <div className="rounded-xl border border-primary/40 bg-primary/10 p-4">
-                        <p className="text-[11px] tracking-wide text-primary uppercase">
-                          Take this route
-                        </p>
-                        <p className="mt-1 font-medium">{advice.recommendedRoute}</p>
-                      </div>
-                      <p className="text-sm leading-relaxed text-muted-foreground">
-                        {advice.reasoning}
+              {routes && submitted && (
+                <>
+                  <div className="panel p-6">
+                    <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-border pb-4">
+                      <h3 className="text-lg font-medium">
+                        {submitted.origin} → {submitted.destination}
+                      </h3>
+                      <p className="text-xs text-muted-foreground">
+                        {submitted.date} at {submitted.time} · {submitted.weather}
+                        {submitted.holiday ? " · holiday" : ""}
                       </p>
                     </div>
-                  )}
-                </div>
 
-                <CongestionChart routes={routes} />
-              </div>
+                    <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                      {routes.map((r) => (
+                        <RouteCard
+                          key={r.id}
+                          route={r}
+                          recommended={r.name === recommendedName}
+                        />
+                      ))}
+                    </div>
+                  </div>
 
-              <FeedbackPanel
-                route={
-                  routes.find((r) => r.name === recommendedName) ?? best
-                }
-                origin={submitted.origin}
-                destination={submitted.destination}
-                time={submitted.time}
-              />
-            </>
-          )}
+                  <div className="grid gap-6 lg:grid-cols-2">
+                    <div className="panel p-6">
+                      <div className="flex items-center justify-between gap-3">
+                        <h3 className="text-lg font-medium">AI recommendation</h3>
+                        {advice && (
+                          <span className="rounded-full border border-border px-2 py-0.5 text-[11px] text-muted-foreground">
+                            {advice.source === "ai" ? "Lovable AI" : "Local fallback"}
+                          </span>
+                        )}
+                      </div>
+
+                      {thinking && (
+                        <p className="mt-4 animate-pulse text-sm text-muted-foreground">
+                          Analysing routes…
+                        </p>
+                      )}
+
+                      {advice && (
+                        <div className="mt-4 space-y-4">
+                          <p className="text-base leading-relaxed">{advice.summary}</p>
+                          <div className="rounded-xl border border-primary/40 bg-primary/10 p-4">
+                            <p className="text-[11px] tracking-wide text-primary uppercase">
+                              Take this route
+                            </p>
+                            <p className="mt-1 font-medium">{advice.recommendedRoute}</p>
+                          </div>
+                          <p className="text-sm leading-relaxed text-muted-foreground">
+                            {advice.reasoning}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+
+                    <CongestionChart routes={routes} />
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
         </section>
-      </div>
 
-      <footer className="mt-16 border-t border-border pt-6 text-xs text-muted-foreground">
-        Predictions are precomputed from an offline Random Forest model. Feedback is stored in
-        your browser only.
-      </footer>
-    </main>
+        {/* How it works */}
+        <section id="how-it-works" className="border-y border-border/70 bg-surface/30">
+          <div className="mx-auto w-full max-w-6xl px-5 py-16 sm:px-8 lg:py-20">
+            <SectionHeading
+              eyebrow="How it works"
+              title="An offline-trained model, delivered instantly"
+              description="Three steps, no backend inference and no waiting on a live traffic feed."
+            />
+            <ol className="mt-10 grid gap-5 md:grid-cols-3">
+              {[
+                {
+                  n: "01",
+                  t: "Trained offline",
+                  d: "A Random Forest is fitted on historical volume, weather and calendar data, then reduced to compact factor weights.",
+                },
+                {
+                  n: "02",
+                  t: "Scored in-browser",
+                  d: "Those weights ship as static JSON, so each route is scored and classified Low, Medium or High on your device.",
+                },
+                {
+                  n: "03",
+                  t: "Explained by AI",
+                  d: "The scored routes are summarised into a single clear recommendation, with a deterministic fallback if AI is unavailable.",
+                },
+              ].map((s) => (
+                <li key={s.n} className="panel p-6">
+                  <span className="font-mono text-xs text-primary">{s.n}</span>
+                  <h3 className="mt-3 text-base font-medium">{s.t}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{s.d}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+
+        {/* Accuracy */}
+        <section id="accuracy" className="mx-auto w-full max-w-6xl px-5 py-16 sm:px-8 lg:py-20">
+          <SectionHeading
+            eyebrow="Accuracy & drift"
+            title="Tell us what you actually experienced"
+            description="Every report you log is compared against the prediction to track hit rate, bias and drift over time — stored only in this browser."
+          />
+          <div className="mt-10">
+            <FeedbackPanel
+              route={routes?.find((r) => r.name === recommendedName) ?? best}
+              origin={submitted?.origin ?? form.origin}
+              destination={submitted?.destination ?? form.destination}
+              time={submitted?.time ?? form.time}
+            />
+          </div>
+        </section>
+      </main>
+
+      <SiteFooter />
+    </div>
+  );
+}
+
+function SectionHeading({
+  eyebrow,
+  title,
+  description,
+}: {
+  eyebrow: string;
+  title: string;
+  description: string;
+}) {
+  return (
+    <div className="max-w-2xl">
+      <p className="text-xs font-medium tracking-[0.16em] text-primary uppercase">{eyebrow}</p>
+      <h2 className="mt-3 text-2xl font-semibold tracking-tight sm:text-3xl">{title}</h2>
+      <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base">
+        {description}
+      </p>
+    </div>
   );
 }
 
