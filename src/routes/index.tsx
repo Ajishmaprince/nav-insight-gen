@@ -404,7 +404,7 @@ function Index() {
         {/* Accuracy */}
         <section id="accuracy" className="mx-auto w-full max-w-6xl px-5 py-16 sm:px-8 lg:py-20">
           <SectionHeading
-            eyebrow="Accuracy &amp; drift"
+            eyebrow="Accuracy & drift"
             title="Tell us what you actually experienced"
             description="Every report you log is compared against the prediction to track hit rate, bias and drift over time — stored only in this browser."
           />

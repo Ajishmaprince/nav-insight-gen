@@ -94,6 +94,10 @@
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
   }
+
+  section[id] {
+    scroll-margin-top: 5rem;
+  }
 }
 
 @utility panel {
