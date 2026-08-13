@@ -1,8 +1,10 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useMemo, useState } from "react";
 
 import { SiteFooter } from "@/components/site/SiteFooter";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { CongestionChart, RouteCard } from "@/components/traffic/RouteCard";
 import { FeedbackPanel } from "@/components/traffic/FeedbackPanel";
@@ -47,6 +49,8 @@ function todayISO() {
 
 function Index() {
   const adviceFn = useServerFn(getRouteAdvice);
+  const { user } = useAuth();
+  const [saved, setSaved] = useState<"ok" | "error" | null>(null);
   const [data, setData] = useState<TrafficData | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [form, setForm] = useState<Query>({
@@ -84,6 +88,7 @@ function Index() {
     setSubmitted(form);
     setAdvice(null);
     setThinking(true);
+    setSaved(null);
 
     // Module 2: LLM recommendation with plain-JS fallback.
     try {
@@ -115,6 +120,25 @@ function Index() {
       });
     } finally {
       setThinking(false);
+    }
+
+    // Signed-in users get every forecast saved to their dashboard.
+    if (user) {
+      const chosen = scored.reduce((a, b) => (a.score <= b.score ? a : b));
+      const { error } = await supabase.from("forecasts").insert({
+        user_id: user.id,
+        origin: form.origin,
+        destination: form.destination,
+        depart_time: form.time,
+        travel_date: form.date,
+        weather: form.weather,
+        holiday: form.holiday,
+        recommended_route: chosen.name,
+        score: chosen.score,
+        level: chosen.level,
+        eta_minutes: chosen.etaMinutes,
+      });
+      setSaved(error ? "error" : "ok");
     }
   }
 
@@ -322,7 +346,32 @@ function Index() {
                         />
                       ))}
                     </div>
+
+                    <p className="mt-5 border-t border-border pt-4 text-xs text-muted-foreground">
+                      {user ? (
+                        saved === "error" ? (
+                          "Could not save this forecast to your dashboard."
+                        ) : (
+                          <>
+                            Saved to your{" "}
+                            <Link to="/dashboard" className="font-semibold text-primary hover:underline">
+                              dashboard
+                            </Link>
+                            .
+                          </>
+                        )
+                      ) : (
+                        <>
+                          <Link to="/auth" className="font-semibold text-primary hover:underline">
+                            Sign in
+                          </Link>{" "}
+                          to save forecasts to your dashboard.
+                        </>
+                      )}
+                    </p>
                   </div>
+
+
 
                   <div className="grid gap-6 lg:grid-cols-2">
                     <div className="panel p-6">
