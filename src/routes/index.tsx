@@ -88,6 +88,7 @@ function Index() {
     setSubmitted(form);
     setAdvice(null);
     setThinking(true);
+    setSaved(null);
 
     // Module 2: LLM recommendation with plain-JS fallback.
     try {
