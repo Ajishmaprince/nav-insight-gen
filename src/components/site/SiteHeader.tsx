@@ -1,3 +1,7 @@
+import { Link } from "@tanstack/react-router";
+
+import { useAuth } from "@/hooks/useAuth";
+
 const NAV = [
   { label: "Forecast", href: "#forecast" },
   { label: "How it works", href: "#how-it-works" },
