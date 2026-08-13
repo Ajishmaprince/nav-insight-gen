@@ -118,6 +118,25 @@ function Index() {
     } finally {
       setThinking(false);
     }
+
+    // Signed-in users get every forecast saved to their dashboard.
+    if (user) {
+      const chosen = scored.reduce((a, b) => (a.score <= b.score ? a : b));
+      const { error } = await supabase.from("forecasts").insert({
+        user_id: user.id,
+        origin: form.origin,
+        destination: form.destination,
+        depart_time: form.time,
+        travel_date: form.date,
+        weather: form.weather,
+        holiday: form.holiday,
+        recommended_route: chosen.name,
+        score: chosen.score,
+        level: chosen.level,
+        eta_minutes: chosen.etaMinutes,
+      });
+      setSaved(error ? "error" : "ok");
+    }
   }
 
   return (
