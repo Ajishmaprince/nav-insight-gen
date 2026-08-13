@@ -49,6 +49,21 @@ export function SiteHeader() {
             <span className="size-1.5 animate-pulse rounded-full bg-low" />
             Model online
           </span>
+          {session ? (
+            <Link
+              to="/dashboard"
+              className="rounded-lg border border-border bg-secondary px-3.5 py-2 text-xs font-semibold text-secondary-foreground transition-colors hover:border-primary/50"
+            >
+              Dashboard
+            </Link>
+          ) : (
+            <Link
+              to="/auth"
+              className="rounded-lg border border-border bg-secondary px-3.5 py-2 text-xs font-semibold text-secondary-foreground transition-colors hover:border-primary/50"
+            >
+              Sign in
+            </Link>
+          )}
           <a
             href="#forecast"
             className="rounded-lg bg-primary px-3.5 py-2 text-xs font-semibold text-primary-foreground transition-opacity hover:opacity-90"
