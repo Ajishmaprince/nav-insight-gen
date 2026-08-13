@@ -14,7 +14,54 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      forecasts: {
+        Row: {
+          created_at: string
+          depart_time: string
+          destination: string
+          eta_minutes: number
+          holiday: boolean
+          id: string
+          level: string
+          origin: string
+          recommended_route: string
+          score: number
+          travel_date: string
+          user_id: string
+          weather: string
+        }
+        Insert: {
+          created_at?: string
+          depart_time: string
+          destination: string
+          eta_minutes: number
+          holiday?: boolean
+          id?: string
+          level: string
+          origin: string
+          recommended_route: string
+          score: number
+          travel_date: string
+          user_id: string
+          weather: string
+        }
+        Update: {
+          created_at?: string
+          depart_time?: string
+          destination?: string
+          eta_minutes?: number
+          holiday?: boolean
+          id?: string
+          level?: string
+          origin?: string
+          recommended_route?: string
+          score?: number
+          travel_date?: string
+          user_id?: string
+          weather?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
