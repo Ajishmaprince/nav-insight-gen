@@ -9,6 +9,8 @@ const NAV = [
 ];
 
 export function SiteHeader() {
+  const { session } = useAuth();
+
   return (
     <header className="sticky top-0 z-40 border-b border-border/70 bg-background/80 backdrop-blur-xl">
       <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-6 px-5 sm:px-8">
