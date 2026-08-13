@@ -346,7 +346,32 @@ function Index() {
                         />
                       ))}
                     </div>
+
+                    <p className="mt-5 border-t border-border pt-4 text-xs text-muted-foreground">
+                      {user ? (
+                        saved === "error" ? (
+                          "Could not save this forecast to your dashboard."
+                        ) : (
+                          <>
+                            Saved to your{" "}
+                            <Link to="/dashboard" className="font-semibold text-primary hover:underline">
+                              dashboard
+                            </Link>
+                            .
+                          </>
+                        )
+                      ) : (
+                        <>
+                          <Link to="/auth" className="font-semibold text-primary hover:underline">
+                            Sign in
+                          </Link>{" "}
+                          to save forecasts to your dashboard.
+                        </>
+                      )}
+                    </p>
                   </div>
+
+
 
                   <div className="grid gap-6 lg:grid-cols-2">
                     <div className="panel p-6">
