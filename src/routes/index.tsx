@@ -49,6 +49,8 @@ function todayISO() {
 
 function Index() {
   const adviceFn = useServerFn(getRouteAdvice);
+  const { user } = useAuth();
+  const [saved, setSaved] = useState<"ok" | "error" | null>(null);
   const [data, setData] = useState<TrafficData | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [form, setForm] = useState<Query>({
