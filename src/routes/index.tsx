@@ -3,6 +3,8 @@ import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useMemo, useState } from "react";
 
 import { SiteFooter } from "@/components/site/SiteFooter";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { CongestionChart, RouteCard } from "@/components/traffic/RouteCard";
 import { FeedbackPanel } from "@/components/traffic/FeedbackPanel";
