@@ -2,6 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useMemo, useState } from "react";
 
+import heroImage from "@/assets/hero-highway.jpg";
+import cityImage from "@/assets/city-morning.jpg";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
