@@ -37,30 +37,62 @@ function AuthPage() {
   const [notice, setNotice] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!loading && session) void navigate({ to: "/dashboard" });
+    if (!loading && session) void navigate({ to: "/", replace: true });
   }, [loading, session, navigate]);
+
+  function friendly(message: string) {
+    const m = message.toLowerCase();
+    if (m.includes("invalid login credentials"))
+      return "That email and password don't match an account. Check them, or create an account.";
+    if (m.includes("email not confirmed"))
+      return "Please confirm your email from the link we sent, then sign in.";
+    if (m.includes("user already registered") || m.includes("already been registered"))
+      return "An account with this email already exists — sign in instead.";
+    if (m.includes("password should be at least"))
+      return "Use a password with at least 6 characters.";
+    if (m.includes("rate limit") || m.includes("too many"))
+      return "Too many attempts. Please wait a minute and try again.";
+    if (m.includes("failed to fetch") || m.includes("network"))
+      return "Network problem — check your connection and try again.";
+    return message;
+  }
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
     setNotice(null);
+
+    const cleanEmail = email.trim().toLowerCase();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
+      setError("Enter a valid email address.");
+      return;
+    }
+    if (password.length < 6) {
+      setError("Use a password with at least 6 characters.");
+      return;
+    }
+
     setBusy(true);
     try {
       if (mode === "signin") {
-        const { error: err } = await supabase.auth.signInWithPassword({ email, password });
+        const { error: err } = await supabase.auth.signInWithPassword({
+          email: cleanEmail,
+          password,
+        });
         if (err) throw err;
-        void navigate({ to: "/dashboard" });
+        void navigate({ to: "/", replace: true });
       } else {
         const { error: err } = await supabase.auth.signUp({
-          email,
+          email: cleanEmail,
           password,
-          options: { emailRedirectTo: `${window.location.origin}/dashboard` },
+          options: { emailRedirectTo: window.location.origin },
         });
         if (err) throw err;
         setNotice("Account created. Check your inbox to confirm your email, then sign in.");
+        setMode("signin");
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong. Try again.");
+      setError(friendly(err instanceof Error ? err.message : "Something went wrong. Try again."));
     } finally {
       setBusy(false);
     }
@@ -78,7 +110,7 @@ function AuthPage() {
       return;
     }
     if (result.redirected) return;
-    void navigate({ to: "/dashboard" });
+    void navigate({ to: "/", replace: true });
   }
 
   return (
