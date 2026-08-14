@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useMemo, useState } from "react";
 
@@ -51,7 +51,13 @@ function todayISO() {
 
 function Index() {
   const adviceFn = useServerFn(getRouteAdvice);
-  const { user } = useAuth();
+  const { user, session, loading: authLoading } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!authLoading && !session) void navigate({ to: "/auth", replace: true });
+  }, [authLoading, session, navigate]);
+
   const [saved, setSaved] = useState<"ok" | "error" | null>(null);
   const [data, setData] = useState<TrafficData | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
