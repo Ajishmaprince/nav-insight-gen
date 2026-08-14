@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   clearFeedback,
   computeDrift,
@@ -22,9 +22,15 @@ export function FeedbackPanel({
   destination: string;
   time: string;
 }) {
-  const [entries, setEntries] = useState<FeedbackEntry[]>(() => readFeedback());
+  const [entries, setEntries] = useState<FeedbackEntry[]>([]);
   const [saved, setSaved] = useState(false);
   const drift = useMemo(() => computeDrift(entries), [entries]);
+
+  // Read after hydration so server and client markup match.
+  useEffect(() => {
+    setEntries(readFeedback());
+  }, []);
+
 
   function log(actual: Level) {
     if (!route) return;
