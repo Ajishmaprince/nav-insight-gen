@@ -463,6 +463,38 @@ function Index() {
                 </li>
               ))}
             </ol>
+
+            <div className="mt-10 grid gap-6 overflow-hidden rounded-2xl border border-border bg-card md:grid-cols-2">
+              <img
+                src={cityImage}
+                alt="Commuters and buses on a bright city street during the morning peak"
+                width={1200}
+                height={900}
+                loading="lazy"
+                className="h-64 w-full object-cover md:h-full"
+              />
+              <div className="p-6 sm:p-8">
+                <h3 className="text-lg font-semibold tracking-tight">Built for the peak hour</h3>
+                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                  Congestion is rarely about distance. TraffIQ weighs the hour of departure, the
+                  weekday, holidays and current weather, so a longer bypass often wins over the
+                  obvious direct road.
+                </p>
+                <ul className="mt-5 space-y-2 text-sm text-muted-foreground">
+                  {[
+                    "Hourly and weekday demand curves",
+                    "Weather multipliers for rain, fog and snow",
+                    "Holiday adjustment for lighter commutes",
+                  ].map((item) => (
+                    <li key={item} className="flex items-start gap-2">
+                      <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-primary" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
           </div>
         </section>
 
