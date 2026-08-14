@@ -150,6 +150,14 @@ function Index() {
     }
   }
 
+  if (authLoading || !session) {
+    return (
+      <div className="grid min-h-screen place-items-center">
+        <p className="animate-pulse text-sm text-muted-foreground">Checking your session…</p>
+      </div>
+    );
+  }
+
   return (
     <div id="top">
       <SiteHeader />
