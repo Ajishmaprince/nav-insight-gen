@@ -150,9 +150,9 @@ function Index() {
         {/* Hero */}
         <section className="border-b border-border/70">
           <div className="mx-auto w-full max-w-6xl px-5 py-16 sm:px-8 lg:py-24">
-            <div className="grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+            <div className="grid gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
               <div>
-                <span className="inline-flex items-center gap-2 rounded-full border border-primary/40 bg-primary/10 px-3 py-1 text-xs font-medium tracking-wide text-primary uppercase">
+                <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium tracking-wide text-primary uppercase">
                   Traffic intelligence platform
                 </span>
                 <h1 className="mt-6 text-4xl leading-[1.05] font-semibold tracking-tight sm:text-5xl lg:text-6xl">
@@ -168,35 +168,49 @@ function Index() {
                 <div className="mt-8 flex flex-wrap items-center gap-3">
                   <a
                     href="#forecast"
-                    className="rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+                    className="rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-glow transition-opacity hover:opacity-90"
                   >
                     Forecast my route
                   </a>
                   <a
                     href="#how-it-works"
-                    className="rounded-xl border border-border bg-secondary px-5 py-3 text-sm font-semibold text-secondary-foreground transition-colors hover:border-primary/50 hover:text-primary"
+                    className="rounded-xl border border-border bg-card px-5 py-3 text-sm font-semibold text-secondary-foreground transition-colors hover:border-primary/50 hover:text-primary"
                   >
                     See how it works
                   </a>
                 </div>
               </div>
 
-              <dl className="grid grid-cols-2 gap-4">
-                {[
-                  { k: "3", v: "Alternate routes scored per trip" },
-                  { k: "0 ms", v: "Server round-trips for scoring" },
-                  { k: "24 × 7", v: "Hour and weekday factors modelled" },
-                  { k: "5", v: "Weather conditions accounted for" },
-                ].map((s) => (
-                  <div key={s.v} className="panel p-5">
-                    <dt className="font-mono text-2xl leading-none text-primary">{s.k}</dt>
-                    <dd className="mt-2 text-xs leading-relaxed text-muted-foreground">{s.v}</dd>
-                  </div>
-                ))}
-              </dl>
+              <figure className="panel overflow-hidden p-0">
+                <img
+                  src={heroImage}
+                  alt="Aerial view of a multi-level city highway interchange in daylight"
+                  width={1600}
+                  height={1200}
+                  className="h-72 w-full object-cover sm:h-96"
+                />
+                <figcaption className="border-t border-border px-5 py-3 text-xs text-muted-foreground">
+                  Modelled on hourly volume patterns from real interstate traffic records.
+                </figcaption>
+              </figure>
             </div>
+
+            <dl className="mt-12 grid grid-cols-2 gap-4 lg:grid-cols-4">
+              {[
+                { k: "3", v: "Alternate routes scored per trip" },
+                { k: "0 ms", v: "Server round-trips for scoring" },
+                { k: "24 × 7", v: "Hour and weekday factors modelled" },
+                { k: "5", v: "Weather conditions accounted for" },
+              ].map((s) => (
+                <div key={s.v} className="panel p-5">
+                  <dt className="font-mono text-2xl leading-none text-primary">{s.k}</dt>
+                  <dd className="mt-2 text-xs leading-relaxed text-muted-foreground">{s.v}</dd>
+                </div>
+              ))}
+            </dl>
           </div>
         </section>
+
 
         {/* Forecast */}
         <section id="forecast" className="mx-auto w-full max-w-6xl px-5 py-16 sm:px-8 lg:py-20">
