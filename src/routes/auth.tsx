@@ -82,14 +82,18 @@ function AuthPage() {
         if (err) throw err;
         void navigate({ to: "/", replace: true });
       } else {
-        const { error: err } = await supabase.auth.signUp({
+        const { data, error: err } = await supabase.auth.signUp({
           email: cleanEmail,
           password,
           options: { emailRedirectTo: window.location.origin },
         });
         if (err) throw err;
-        setNotice("Account created. Check your inbox to confirm your email, then sign in.");
-        setMode("signin");
+        if (data.session) {
+          void navigate({ to: "/", replace: true });
+        } else {
+          setNotice("Account created. Check your inbox to confirm your email, then sign in.");
+          setMode("signin");
+        }
       }
     } catch (err) {
       setError(friendly(err instanceof Error ? err.message : "Something went wrong. Try again."));
