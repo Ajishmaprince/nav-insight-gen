@@ -1,19 +1,19 @@
 {
   "meta": {
-    "source": "UCI Metro Interstate Traffic Volume (adapted) + synthetic route split",
+    "source": "Historical traffic volume patterns (adapted) + Bengaluru route split",
     "model": "RandomForestRegressor -> precomputed prediction table",
     "generated_by": "scripts/train_export_model.py",
     "version": "1.0.0",
     "target": "predicted_traffic_volume (vehicles/hour, normalised 0-100 congestion score)"
   },
   "locations": [
-    "Downtown",
-    "Airport",
-    "Tech Park",
-    "University",
-    "Riverside",
-    "Stadium",
-    "Old Town"
+    "Koramangala",
+    "Whitefield",
+    "Electronic City",
+    "Kempegowda International Airport",
+    "Indiranagar",
+    "Hebbal",
+    "Yeshwanthpur"
   ],
   "hour_factor": {
     "0": 0.22,
@@ -60,69 +60,69 @@
   "holiday_factor": 0.68,
   "thresholds": { "low": 40, "medium": 70 },
   "routes": {
-    "Downtown>Airport": [
-      { "id": "r1", "name": "Expressway E-4", "distance_km": 18.2, "base_score": 74, "via": "Ring Road" },
-      { "id": "r2", "name": "Riverside Boulevard", "distance_km": 21.6, "base_score": 55, "via": "Riverside" },
-      { "id": "r3", "name": "Old Mill Bypass", "distance_km": 25.1, "base_score": 38, "via": "Old Town" }
+    "Koramangala>Kempegowda International Airport": [
+      { "id": "r1", "name": "Bellary Road", "distance_km": 38.2, "base_score": 74, "via": "Hebbal" },
+      { "id": "r2", "name": "Outer Ring Road", "distance_km": 43.6, "base_score": 55, "via": "Nagawara" },
+      { "id": "r3", "name": "Hennur Road", "distance_km": 45.1, "base_score": 38, "via": "Hennur" }
     ],
-    "Downtown>Tech Park": [
-      { "id": "r1", "name": "Central Arterial", "distance_km": 11.4, "base_score": 81, "via": "Market St" },
-      { "id": "r2", "name": "Canal Link Road", "distance_km": 13.9, "base_score": 58, "via": "Canal" },
-      { "id": "r3", "name": "North Loop", "distance_km": 16.7, "base_score": 44, "via": "North Loop" }
+    "Koramangala>Whitefield": [
+      { "id": "r1", "name": "Outer Ring Road", "distance_km": 18.4, "base_score": 81, "via": "Marathahalli" },
+      { "id": "r2", "name": "Sarjapur Road", "distance_km": 16.9, "base_score": 58, "via": "HSR Layout" },
+      { "id": "r3", "name": "Old Airport Road", "distance_km": 19.7, "base_score": 44, "via": "Domlur" }
     ],
-    "Downtown>University": [
-      { "id": "r1", "name": "College Avenue", "distance_km": 7.8, "base_score": 69, "via": "College Ave" },
-      { "id": "r2", "name": "Park Crescent", "distance_km": 9.5, "base_score": 47, "via": "City Park" }
+    "Koramangala>Electronic City": [
+      { "id": "r1", "name": "Hosur Road", "distance_km": 14.8, "base_score": 69, "via": "Silk Board" },
+      { "id": "r2", "name": "NICE Road", "distance_km": 22.5, "base_score": 47, "via": "Bannerghatta Road" }
     ],
-    "Downtown>Stadium": [
-      { "id": "r1", "name": "Stadium Approach", "distance_km": 6.2, "base_score": 88, "via": "Gate 3" },
-      { "id": "r2", "name": "East Service Road", "distance_km": 8.4, "base_score": 61, "via": "East Yard" },
-      { "id": "r3", "name": "Warehouse Cut", "distance_km": 10.1, "base_score": 42, "via": "Depot" }
+    "Koramangala>Hebbal": [
+      { "id": "r1", "name": "Inner Ring Road", "distance_km": 14.2, "base_score": 88, "via": "Indiranagar" },
+      { "id": "r2", "name": "Bellary Road", "distance_km": 16.4, "base_score": 61, "via": "Cantonment" },
+      { "id": "r3", "name": "Jayamahal Road", "distance_km": 15.1, "base_score": 42, "via": "Palace Grounds" }
     ],
-    "Airport>Tech Park": [
-      { "id": "r1", "name": "Airport Expressway", "distance_km": 22.5, "base_score": 66, "via": "E-4" },
-      { "id": "r2", "name": "Perimeter Road", "distance_km": 26.0, "base_score": 49, "via": "Perimeter" },
-      { "id": "r3", "name": "Riverside Bypass", "distance_km": 28.8, "base_score": 35, "via": "Riverside" }
+    "Kempegowda International Airport>Whitefield": [
+      { "id": "r1", "name": "Airport Road", "distance_km": 39.5, "base_score": 66, "via": "Hebbal" },
+      { "id": "r2", "name": "Outer Ring Road", "distance_km": 42.0, "base_score": 49, "via": "Nagawara" },
+      { "id": "r3", "name": "Hennur-Bagalur Road", "distance_km": 40.8, "base_score": 35, "via": "Hennur" }
     ],
-    "Airport>University": [
-      { "id": "r1", "name": "Expressway + College Ave", "distance_km": 24.9, "base_score": 72, "via": "E-4" },
-      { "id": "r2", "name": "Perimeter + Park Crescent", "distance_km": 27.4, "base_score": 51, "via": "City Park" }
+    "Kempegowda International Airport>Electronic City": [
+      { "id": "r1", "name": "Airport Road + Hosur Road", "distance_km": 55.9, "base_score": 72, "via": "Hebbal" },
+      { "id": "r2", "name": "Peripheral Ring Road", "distance_km": 61.4, "base_score": 51, "via": "Doddaballapur Road" }
     ],
-    "Airport>Riverside": [
-      { "id": "r1", "name": "Coastal Drive", "distance_km": 14.7, "base_score": 58, "via": "Coast Rd" },
-      { "id": "r2", "name": "Perimeter Road", "distance_km": 17.2, "base_score": 41, "via": "Perimeter" }
+    "Kempegowda International Airport>Indiranagar": [
+      { "id": "r1", "name": "Bellary Road + Inner Ring Road", "distance_km": 39.7, "base_score": 58, "via": "Hebbal" },
+      { "id": "r2", "name": "Hennur Road", "distance_km": 37.2, "base_score": 41, "via": "Kalyan Nagar" }
     ],
-    "Tech Park>University": [
-      { "id": "r1", "name": "Innovation Way", "distance_km": 5.6, "base_score": 63, "via": "Campus Gate" },
-      { "id": "r2", "name": "Canal Link Road", "distance_km": 7.1, "base_score": 45, "via": "Canal" }
+    "Whitefield>Electronic City": [
+      { "id": "r1", "name": "Outer Ring Road + Hosur Road", "distance_km": 34.6, "base_score": 63, "via": "Marathahalli" },
+      { "id": "r2", "name": "Sarjapur Road", "distance_km": 31.1, "base_score": 45, "via": "Carmelaram" }
     ],
-    "Tech Park>Stadium": [
-      { "id": "r1", "name": "Central Arterial", "distance_km": 12.9, "base_score": 79, "via": "Market St" },
-      { "id": "r2", "name": "North Loop", "distance_km": 15.3, "base_score": 52, "via": "North Loop" }
+    "Whitefield>Hebbal": [
+      { "id": "r1", "name": "Outer Ring Road", "distance_km": 26.9, "base_score": 79, "via": "Mahadevapura" },
+      { "id": "r2", "name": "Old Airport Road", "distance_km": 29.3, "base_score": 52, "via": "Domlur" }
     ],
-    "University>Stadium": [
-      { "id": "r1", "name": "Campus Connector", "distance_km": 8.9, "base_score": 76, "via": "Gate 1" },
-      { "id": "r2", "name": "Riverside Boulevard", "distance_km": 11.8, "base_score": 48, "via": "Riverside" }
+    "Electronic City>Hebbal": [
+      { "id": "r1", "name": "NICE Road + Tumakuru Road", "distance_km": 38.9, "base_score": 76, "via": "Goraguntepalya" },
+      { "id": "r2", "name": "Inner Ring Road", "distance_km": 36.8, "base_score": 48, "via": "Indiranagar" }
     ],
-    "Riverside>Downtown": [
-      { "id": "r1", "name": "Riverside Boulevard", "distance_km": 9.3, "base_score": 71, "via": "Bridge 2" },
-      { "id": "r2", "name": "Old Mill Bypass", "distance_km": 12.4, "base_score": 46, "via": "Old Town" }
+    "Indiranagar>Koramangala": [
+      { "id": "r1", "name": "Intermediate Ring Road", "distance_km": 6.3, "base_score": 71, "via": "Domlur" },
+      { "id": "r2", "name": "100 Feet Road", "distance_km": 7.4, "base_score": 46, "via": "Ejipura" }
     ],
-    "Riverside>Tech Park": [
-      { "id": "r1", "name": "Canal Link Road", "distance_km": 13.1, "base_score": 64, "via": "Canal" },
-      { "id": "r2", "name": "North Loop", "distance_km": 16.0, "base_score": 43, "via": "North Loop" }
+    "Indiranagar>Whitefield": [
+      { "id": "r1", "name": "Old Airport Road", "distance_km": 16.1, "base_score": 64, "via": "Marathahalli" },
+      { "id": "r2", "name": "Outer Ring Road", "distance_km": 18.0, "base_score": 43, "via": "Kundalahalli" }
     ],
-    "Old Town>Downtown": [
-      { "id": "r1", "name": "Heritage Street", "distance_km": 4.8, "base_score": 83, "via": "Market St" },
-      { "id": "r2", "name": "Old Mill Bypass", "distance_km": 7.6, "base_score": 49, "via": "Mill Rd" }
+    "Yeshwanthpur>Koramangala": [
+      { "id": "r1", "name": "Tumakuru Road + NICE Road", "distance_km": 19.8, "base_score": 83, "via": "Goraguntepalya" },
+      { "id": "r2", "name": "Chord Road", "distance_km": 16.6, "base_score": 49, "via": "Vijayanagar" }
     ],
-    "Old Town>Airport": [
-      { "id": "r1", "name": "Old Mill Bypass", "distance_km": 24.3, "base_score": 52, "via": "Mill Rd" },
-      { "id": "r2", "name": "Expressway E-4", "distance_km": 21.0, "base_score": 70, "via": "Ring Road" }
+    "Yeshwanthpur>Kempegowda International Airport": [
+      { "id": "r1", "name": "Tumakuru Road + Bellary Road", "distance_km": 34.3, "base_score": 52, "via": "Hebbal" },
+      { "id": "r2", "name": "Outer Ring Road", "distance_km": 37.0, "base_score": 70, "via": "Nagawara" }
     ],
-    "Stadium>Airport": [
-      { "id": "r1", "name": "East Service Road", "distance_km": 19.6, "base_score": 68, "via": "East Yard" },
-      { "id": "r2", "name": "Perimeter Road", "distance_km": 23.2, "base_score": 44, "via": "Perimeter" }
+    "Hebbal>Kempegowda International Airport": [
+      { "id": "r1", "name": "Bellary Road", "distance_km": 27.6, "base_score": 68, "via": "Yelahanka" },
+      { "id": "r2", "name": "Airport Road", "distance_km": 30.2, "base_score": 44, "via": "Jakkur" }
     ]
   }
 }
