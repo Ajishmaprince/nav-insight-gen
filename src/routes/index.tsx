@@ -62,8 +62,8 @@ function Index() {
   const [data, setData] = useState<TrafficData | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [form, setForm] = useState<Query>({
-    origin: "Downtown",
-    destination: "Airport",
+    origin: "Koramangala",
+    destination: "Whitefield",
     time: "08:30",
     date: todayISO(),
     weather: "clear",
@@ -206,7 +206,7 @@ function Index() {
                   className="h-72 w-full object-cover sm:h-96"
                 />
                 <figcaption className="border-t border-border px-5 py-3 text-xs text-muted-foreground">
-                  Modelled on hourly volume patterns from real interstate traffic records.
+                   Modelled on hourly volume patterns from real traffic records.
                 </figcaption>
               </figure>
             </div>
