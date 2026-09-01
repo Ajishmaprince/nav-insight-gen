@@ -1,6 +1,6 @@
 {
   "meta": {
-    "source": "UCI Metro Interstate Traffic Volume (adapted) + synthetic route split",
+    "source": "Historical traffic volume patterns (adapted) + Bengaluru route split",
     "model": "RandomForestRegressor -> precomputed prediction table",
     "generated_by": "scripts/train_export_model.py",
     "version": "1.0.0",
