@@ -43,7 +43,7 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const WEATHERS: Weather[] = ["clear", "clouds", "rain", "fog", "snow"];
+const WEATHERS: Weather[] = ["clear", "rain"];
 
 function todayISO() {
   return new Date().toISOString().slice(0, 10);
@@ -177,9 +177,8 @@ function Index() {
                   before you leave.
                 </h1>
                 <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-                  TraffIQ scores every alternate route for your trip using a congestion model
-                  trained offline and executed entirely in your browser — then explains the
-                  smartest choice in one short paragraph.
+                  TraffIQ forecasts Bengaluru route congestion from timestamped travel-time
+                  observations — then explains the smartest choice in one short paragraph.
                 </p>
                 <div className="mt-8 flex flex-wrap items-center gap-3">
                   <a
@@ -206,17 +205,17 @@ function Index() {
                   className="h-72 w-full object-cover sm:h-96"
                 />
                 <figcaption className="border-t border-border px-5 py-3 text-xs text-muted-foreground">
-                   Modelled on hourly volume patterns from real traffic records.
+                  Built from observed Bengaluru travel times, not synthetic traffic.
                 </figcaption>
               </figure>
             </div>
 
             <dl className="mt-12 grid grid-cols-2 gap-4 lg:grid-cols-4">
               {[
-                { k: "3", v: "Alternate routes scored per trip" },
-                { k: "0 ms", v: "Server round-trips for scoring" },
-                { k: "24 × 7", v: "Hour and weekday factors modelled" },
-                { k: "5", v: "Weather conditions accounted for" },
+                { k: "13", v: "Bengaluru routes observed" },
+                { k: "96k+", v: "Timestamped traffic observations" },
+                { k: "24 × 7", v: "Hour and weekday patterns" },
+                { k: "2", v: "Observed weather conditions" },
               ].map((s) => (
                 <div key={s.v} className="panel p-5">
                   <dt className="font-mono text-2xl leading-none text-primary">{s.k}</dt>
@@ -233,7 +232,7 @@ function Index() {
           <SectionHeading
             eyebrow="Route forecast"
             title="Plan a trip and compare every option"
-            description="Set your departure details on the left. Scores range from 0 to 100, where lower means freer-flowing traffic."
+            description="Set your departure details on the left. Scores range from 0 to 100, where lower means freer-flowing traffic. Routes are calibrated from observed Bengaluru travel times."
           />
 
           <div className="mt-10 grid gap-6 lg:grid-cols-[380px_1fr]">
@@ -327,6 +326,12 @@ function Index() {
                   Model {data.meta.version} · {data.meta.model}
                   <br />
                   Source: {data.meta.source}
+                  {data.meta.date_range && (
+                    <>
+                      <br />
+                      Coverage: {data.meta.date_range.start} to {data.meta.date_range.end}
+                    </>
+                  )}
                 </p>
               )}
             </form>
@@ -349,7 +354,7 @@ function Index() {
                   </span>
                   <p className="mt-4 max-w-sm text-sm text-muted-foreground">
                     Choose an origin, destination and departure time to score up to three
-                    alternate routes side by side.
+                    modelled Bengaluru routes side by side.
                   </p>
                 </div>
               )}

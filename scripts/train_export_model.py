@@ -1,114 +1,143 @@
-"""
-Module 1 - Core AI model training + export (run in Colab or locally).
+"""Export a browser-ready Bengaluru congestion model from real observations.
 
-Trains a congestion predictor on the UCI "Metro Interstate Traffic Volume"
-dataset (or a synthetic fallback with the same columns) and exports a
-precomputed prediction table to `public/traffic_data.json`, which the static
-frontend reads client-side. No Python runs in production.
+The source is the open Bengaluru traffic dataset maintained by Traffic Monitor
+Lizard. It contains timestamped Google Maps travel-time estimates for real
+city routes. The browser only reads the compact JSON generated here; Python
+and pandas are never used in production.
 
 Usage:
-    pip install pandas scikit-learn
+    pip install pandas
     python scripts/train_export_model.py
 """
 
 import json
-import math
 import os
-import random
 
 import pandas as pd
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import mean_absolute_error, r2_score
-from sklearn.model_selection import train_test_split
 
-UCI_URL = (
-    "https://archive.ics.uci.edu/ml/machine-learning-databases/00492/"
-    "Metro_Interstate_Traffic_Volume.csv.gz"
-)
-OUT = os.path.join(os.path.dirname(__file__), "..", "public", "traffic_data.json")
-WEATHER = ["clear", "clouds", "rain", "fog", "snow"]
+TRAFFIC_URL = "https://raw.githubusercontent.com/thecont1/traffic-monitor-lizard/main/data/csv-traffic-bangalore.csv"
+ROUTES_URL = "https://raw.githubusercontent.com/thecont1/traffic-monitor-lizard/main/data/csv-routes-bangalore.csv"
+SOURCE_URL = "https://github.com/thecont1/traffic-monitor-lizard"
+OUT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "public", "traffic_data.json"))
+WEATHER = ["clear", "rain"]
 
 
-def load_dataset() -> pd.DataFrame:
-    try:
-        df = pd.read_csv(UCI_URL, compression="gzip")
-        df["date_time"] = pd.to_datetime(df["date_time"])
-        df["hour"] = df["date_time"].dt.hour
-        df["dow"] = df["date_time"].dt.dayofweek
-        df["holiday_flag"] = (df["holiday"] != "None").astype(int)
-        df["weather"] = df["weather_main"].str.lower().where(
-            df["weather_main"].str.lower().isin(WEATHER), "clear"
-        )
-        return df[["hour", "dow", "holiday_flag", "weather", "traffic_volume"]]
-    except Exception as exc:  # offline / dataset moved -> synthetic fallback
-        print(f"UCI download failed ({exc}); generating synthetic dataset.")
-        rows = []
-        random.seed(7)
-        for _ in range(20000):
-            hour = random.randrange(24)
-            dow = random.randrange(7)
-            holiday = 1 if random.random() < 0.03 else 0
-            weather = random.choice(WEATHER)
-            peak = math.exp(-((hour - 8) ** 2) / 6) + math.exp(-((hour - 17.5) ** 2) / 7)
-            vol = 6000 * (0.15 + 0.85 * peak)
-            vol *= 1.0 if dow < 5 else 0.65
-            vol *= 0.68 if holiday else 1.0
-            vol *= {"clear": 1.0, "clouds": 1.03, "rain": 1.18, "fog": 1.24, "snow": 1.35}[weather]
-            rows.append(
-                dict(
-                    hour=hour,
-                    dow=dow,
-                    holiday_flag=holiday,
-                    weather=weather,
-                    traffic_volume=max(0, vol + random.gauss(0, 250)),
-                )
-            )
-        return pd.DataFrame(rows)
+def load_dataset() -> tuple[pd.DataFrame, pd.DataFrame]:
+    traffic = pd.read_csv(TRAFFIC_URL)
+    routes = pd.read_csv(ROUTES_URL)
+    required = {"date", "time", "route_code", "duration", "distance", "rsi_flag"}
+    missing = required - set(traffic.columns)
+    if missing:
+        raise ValueError(f"Traffic source is missing columns: {sorted(missing)}")
+
+    traffic["duration"] = pd.to_numeric(traffic["duration"], errors="coerce")
+    traffic["distance"] = pd.to_numeric(traffic["distance"], errors="coerce")
+    traffic = traffic.dropna(subset=["date", "time", "route_code", "duration", "distance"])
+    traffic = traffic[(traffic["duration"] > 0) & (traffic["distance"] > 0)]
+    traffic["date_value"] = pd.to_datetime(traffic["date"], errors="coerce")
+    traffic = traffic.dropna(subset=["date_value"])
+    traffic["hour"] = traffic["time"].str.slice(0, 2).astype(int)
+    traffic["dow"] = traffic["date_value"].dt.dayofweek
+    traffic["weather"] = traffic["rsi_flag"].fillna("").str.lower().str.contains("rain").map(
+        {True: "rain", False: "clear"}
+    )
+    return traffic, routes
+
+
+def median_factor(series: pd.Series, baseline: float) -> dict[str, float]:
+    values = series.groupby(series.index).median()
+    return {str(key): round(float(value / baseline), 3) for key, value in values.items()}
 
 
 def main() -> None:
-    df = load_dataset()
-    X = pd.get_dummies(df[["hour", "dow", "holiday_flag", "weather"]], columns=["weather"])
-    y = df["traffic_volume"]
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    df, route_catalog = load_dataset()
 
-    model = RandomForestRegressor(n_estimators=200, min_samples_leaf=3, random_state=42, n_jobs=-1)
-    model.fit(X_train, y_train)
-    pred = model.predict(X_test)
-    print(f"MAE={mean_absolute_error(y_test, pred):.1f}  R2={r2_score(y_test, pred):.3f}")
+    # A route's free-flow baseline is its 10th percentile duration. Scores
+    # measure excess duration against that route's 90th percentile, making
+    # routes comparable even when their distances differ.
+    free_flow = df.groupby("route_code")["duration"].quantile(0.10).rename("free_flow")
+    congested = df.groupby("route_code")["duration"].quantile(0.90).rename("congested")
+    df = df.join(free_flow, on="route_code").join(congested, on="route_code")
+    spread = (df["congested"] - df["free_flow"]).clip(lower=1)
+    df["score"] = (((df["duration"] - df["free_flow"]) / spread) * 100).clip(0, 100)
 
-    # --- Export: reduce the fitted model to multiplicative factor tables ---
-    def factor(col: str, value, base_row: dict) -> float:
-        row = dict(base_row)
-        row[col] = value
-        frame = pd.DataFrame([row]).reindex(columns=X.columns, fill_value=0)
-        return float(model.predict(frame)[0])
+    overall_score = float(df["score"].median())
+    hour_scores = df.groupby("hour")["score"].median()
+    day_scores = df.groupby("dow")["score"].median()
+    weather_scores = df.groupby("weather")["score"].median()
 
-    base = {c: 0 for c in X.columns}
-    base.update({"hour": 8, "dow": 0, "holiday_flag": 0, "weather_clear": 1})
-    peak = factor("hour", 8, base)
+    hour_factor = {str(hour): round(float(score / overall_score), 3) for hour, score in hour_scores.items()}
+    day_factor = {str(day): round(float(score / day_scores.loc[0]), 3) for day, score in day_scores.items()}
+    weather_factor = {
+        weather: round(float(weather_scores.get(weather, overall_score) / weather_scores["clear"]), 3)
+        for weather in WEATHER
+    }
 
-    hour_factor = {str(h): round(factor("hour", h, base) / peak, 3) for h in range(24)}
-    day_factor = {str(d): round(factor("dow", d, base) / factor("dow", 0, base), 3) for d in range(7)}
-    weather_factor = {}
-    for w in WEATHER:
-        row = dict(base)
-        for other in WEATHER:
-            row[f"weather_{other}"] = 1 if other == w else 0
-        frame = pd.DataFrame([row]).reindex(columns=X.columns, fill_value=0)
-        weather_factor[w] = round(float(model.predict(frame)[0]) / peak, 3)
+    catalog = route_catalog.set_index("route_code")
+    routes: dict[str, list[dict]] = {}
+    locations: list[str] = []
+    route_stats = df.groupby("route_code").agg(
+        base_score=("score", "median"),
+        distance_km=("distance", "median"),
+        observations=("score", "size"),
+    )
 
-    with open(os.path.abspath(OUT), "r", encoding="utf-8") as fh:
-        payload = json.load(fh)
+    for route_code, stats in route_stats.iterrows():
+        if route_code not in catalog.index:
+            continue
+        label = str(catalog.loc[route_code, "label_full"])
+        endpoints = [part.strip() for part in label.split("→", maxsplit=1)]
+        if len(endpoints) != 2:
+            continue
+        origin, destination = endpoints
+        locations.extend([origin, destination])
+        route_key = f"{origin}>{destination}"
+        routes[route_key] = [
+            {
+                "id": str(route_code),
+                "name": str(catalog.loc[route_code, "label_short"]),
+                "distance_km": round(float(stats["distance_km"]), 1),
+                "base_score": round(float(stats["base_score"]), 1),
+                "via": "Google Maps observed route",
+                "observations": int(stats["observations"]),
+            }
+        ]
 
-    payload["hour_factor"] = hour_factor
-    payload["day_factor"] = day_factor
-    payload["weather_factor"] = weather_factor
-    payload["meta"]["model"] = "RandomForestRegressor -> precomputed prediction table"
+    dates = pd.to_datetime(df["date_value"])
+    payload = {
+        "meta": {
+            "source": "Traffic Monitor Lizard — Bengaluru traffic snapshots (Google Maps estimates)",
+            "source_url": SOURCE_URL,
+            "license": "CC BY 4.0",
+            "model": "Observed-duration baseline → route, hour, weekday and rain factors",
+            "version": "2.0.0",
+            "generated_by": "scripts/train_export_model.py",
+            "target": "congestion score (0–100) from observed duration above route free-flow baseline",
+            "observations": int(len(df)),
+            "routes_observed": int(len(routes)),
+            "date_range": {"start": dates.min().date().isoformat(), "end": dates.max().date().isoformat()},
+            "weather_coverage": "The source contains clear conditions and rain flags; other weather types are not inferred.",
+        },
+        "locations": sorted(set(locations)),
+        "hour_factor": hour_factor,
+        "day_factor": day_factor,
+        "weather_factor": weather_factor,
+        # The source has no holiday indicator, so holiday remains neutral.
+        "holiday_factor": 1,
+        "thresholds": {"low": 40, "medium": 70},
+        "routes": routes,
+    }
 
-    with open(os.path.abspath(OUT), "w", encoding="utf-8") as fh:
-        json.dump(payload, fh, indent=2)
-    print(f"Wrote {OUT}")
+    with open(OUT, "w", encoding="utf-8") as fh:
+        json.dump(payload, fh, indent=2, ensure_ascii=False)
+    print(
+        f"Exported {len(df):,} observations across {len(routes)} routes "
+        f"({dates.min().date()} to {dates.max().date()}) to {OUT}"
+    )
+
+
+if __name__ == "__main__":
+    main()
 
 
 if __name__ == "__main__":
