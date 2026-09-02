@@ -29,7 +29,7 @@ export function RouteCard({
         <div>
           <h3 className="font-medium leading-tight">{route.name}</h3>
           <p className="mt-0.5 text-xs text-muted-foreground">
-            via {route.via} · {route.distance_km.toFixed(1)} km · ~{route.etaMinutes} min
+            {route.via} · {route.distance_km.toFixed(1)} km · ~{route.etaMinutes} min
           </p>
         </div>
         <span

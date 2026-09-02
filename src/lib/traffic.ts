@@ -1,6 +1,6 @@
 // Module 1 + 3: client-side scoring, classification, validation and drift.
 
-export type Weather = "clear" | "clouds" | "rain" | "fog" | "snow";
+export type Weather = "clear" | "rain";
 export type Level = "Low" | "Medium" | "High";
 
 export type RouteDef = {
@@ -9,14 +9,26 @@ export type RouteDef = {
   distance_km: number;
   base_score: number;
   via: string;
+  observations?: number;
 };
 
 export type TrafficData = {
-  meta: { source: string; model: string; version: string; target: string };
+  meta: {
+    source: string;
+    source_url?: string;
+    license?: string;
+    model: string;
+    version: string;
+    target: string;
+    observations?: number;
+    routes_observed?: number;
+    date_range?: { start: string; end: string };
+    weather_coverage?: string;
+  };
   locations: string[];
   hour_factor: Record<string, number>;
   day_factor: Record<string, number>;
-  weather_factor: Record<string, number>;
+  weather_factor: Record<Weather, number>;
   holiday_factor: number;
   thresholds: { low: number; medium: number };
   routes: Record<string, RouteDef[]>;
