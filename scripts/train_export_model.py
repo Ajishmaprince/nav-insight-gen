@@ -104,6 +104,7 @@ def main() -> None:
         ]
 
     dates = pd.to_datetime(df["date_value"])
+    sorted_locations = sorted(set(locations))
     payload = {
         "meta": {
             "source": "Traffic Monitor Lizard — Bengaluru traffic snapshots (Google Maps estimates)",
@@ -118,7 +119,8 @@ def main() -> None:
             "date_range": {"start": dates.min().date().isoformat(), "end": dates.max().date().isoformat()},
             "weather_coverage": "The source contains clear conditions and rain flags; other weather types are not inferred.",
         },
-        "locations": sorted(set(locations)),
+        "locations": sorted_locations,
+        "location_states": {location: "Karnataka" for location in sorted_locations},
         "hour_factor": hour_factor,
         "day_factor": day_factor,
         "weather_factor": weather_factor,

@@ -7,7 +7,7 @@
     "version": "2.0.0",
     "generated_by": "scripts/train_export_model.py",
     "target": "congestion score (0–100) from observed duration above route free-flow baseline",
-    "observations": 97818,
+    "observations": 97831,
     "routes_observed": 13,
     "date_range": {
       "start": "2025-09-25",
@@ -43,31 +43,59 @@
     "The Watering Hole, Rajarajeshwari Nagar",
     "Yelachenahalli Metro Station"
   ],
+  "location_states": {
+    "Benniganahalli Metro Station": "Karnataka",
+    "Bethel AG Church, Hebbal": "Karnataka",
+    "Big Bull Temple, Basavanagudi": "Karnataka",
+    "Biocon Campus": "Karnataka",
+    "Christ University, Hosur Main Road": "Karnataka",
+    "Coles Park, Fraser Town": "Karnataka",
+    "Embassy TechVillage, Devarabisanahalli": "Karnataka",
+    "Gawky Goose, Wind Tunnel Rd": "Karnataka",
+    "Hemavathi Park, HSR Layout": "Karnataka",
+    "Jaya Prakash Nagar Metro Station": "Karnataka",
+    "Jaya Prakash Narayana Park": "Karnataka",
+    "Karmelaram Railway Station, Chikkabellandur": "Karnataka",
+    "Kempegowda International Airport, Bengaluru": "Karnataka",
+    "Kudlu Gate Metro Station": "Karnataka",
+    "Lulu Mall Bengaluru": "Karnataka",
+    "MG Road Metro Station": "Karnataka",
+    "National Law School of India University": "Karnataka",
+    "Nexus Mall Koramangala": "Karnataka",
+    "SMVT Railway Station": "Karnataka",
+    "Shri Someshwara Swamy Temple, Halasuru": "Karnataka",
+    "Sir Puttanna Chetty Town Hall, Bangalore": "Karnataka",
+    "St. Francis College, Koramangala": "Karnataka",
+    "Swami Vivekananda Road Metro Station": "Karnataka",
+    "The Rameshwaram Cafe @ Brookfield": "Karnataka",
+    "The Watering Hole, Rajarajeshwari Nagar": "Karnataka",
+    "Yelachenahalli Metro Station": "Karnataka"
+  },
   "hour_factor": {
-    "0": 0.2,
-    "1": 0.083,
+    "0": 0.203,
+    "1": 0.085,
     "2": 0.0,
     "3": 0.0,
     "4": 0.0,
-    "5": 0.087,
-    "6": 0.2,
+    "5": 0.088,
+    "6": 0.203,
     "7": 0.667,
-    "8": 1.067,
-    "9": 1.5,
-    "10": 1.6,
-    "11": 1.5,
-    "12": 1.5,
-    "13": 1.44,
-    "14": 1.333,
-    "15": 1.44,
-    "16": 1.6,
-    "17": 1.76,
-    "18": 2.0,
-    "19": 1.833,
-    "20": 1.368,
-    "21": 1.04,
-    "22": 0.72,
-    "23": 0.4
+    "8": 1.084,
+    "9": 1.525,
+    "10": 1.627,
+    "11": 1.525,
+    "12": 1.525,
+    "13": 1.464,
+    "14": 1.356,
+    "15": 1.464,
+    "16": 1.627,
+    "17": 1.789,
+    "18": 2.033,
+    "19": 1.857,
+    "20": 1.391,
+    "21": 1.057,
+    "22": 0.732,
+    "23": 0.407
   },
   "day_factor": {
     "0": 1.0,
@@ -80,7 +108,7 @@
   },
   "weather_factor": {
     "clear": 1.0,
-    "rain": 1.333
+    "rain": 1.356
   },
   "holiday_factor": 1,
   "thresholds": {
@@ -95,7 +123,7 @@
         "distance_km": 10.6,
         "base_score": 57.9,
         "via": "Google Maps observed route",
-        "observations": 7588
+        "observations": 7589
       }
     ],
     "Bethel AG Church, Hebbal>SMVT Railway Station": [
@@ -105,7 +133,7 @@
         "distance_km": 9.7,
         "base_score": 43.5,
         "via": "Google Maps observed route",
-        "observations": 7588
+        "observations": 7589
       }
     ],
     "Kudlu Gate Metro Station>Biocon Campus": [
@@ -113,9 +141,9 @@
         "id": "VJRQ+2M|RMJJ+F4",
         "name": "Hosur Road",
         "distance_km": 10.4,
-        "base_score": 50.0,
+        "base_score": 49.2,
         "via": "Google Maps observed route",
-        "observations": 7588
+        "observations": 7589
       }
     ],
     "The Watering Hole, Rajarajeshwari Nagar>Sir Puttanna Chetty Town Hall, Bangalore": [
@@ -125,7 +153,7 @@
         "distance_km": 9.9,
         "base_score": 45.0,
         "via": "Google Maps observed route",
-        "observations": 7462
+        "observations": 7463
       }
     ],
     "Jaya Prakash Nagar Metro Station>Hemavathi Park, HSR Layout": [
@@ -135,7 +163,7 @@
         "distance_km": 10.1,
         "base_score": 60.0,
         "via": "Google Maps observed route",
-        "observations": 7588
+        "observations": 7589
       }
     ],
     "Big Bull Temple, Basavanagudi>Shri Someshwara Swamy Temple, Halasuru": [
@@ -145,7 +173,7 @@
         "distance_km": 10.2,
         "base_score": 58.3,
         "via": "Google Maps observed route",
-        "observations": 7588
+        "observations": 7589
       }
     ],
     "Karmelaram Railway Station, Chikkabellandur>St. Francis College, Koramangala": [
@@ -155,7 +183,7 @@
         "distance_km": 10.1,
         "base_score": 41.7,
         "via": "Google Maps observed route",
-        "observations": 7332
+        "observations": 7333
       }
     ],
     "National Law School of India University>Yelachenahalli Metro Station": [
@@ -165,7 +193,7 @@
         "distance_km": 10.6,
         "base_score": 65.0,
         "via": "Google Maps observed route",
-        "observations": 7153
+        "observations": 7154
       }
     ],
     "Lulu Mall Bengaluru>Nexus Mall Koramangala": [
@@ -175,7 +203,7 @@
         "distance_km": 10.6,
         "base_score": 54.2,
         "via": "Google Maps observed route",
-        "observations": 7588
+        "observations": 7589
       }
     ],
     "MG Road Metro Station>Kempegowda International Airport, Bengaluru": [
@@ -185,7 +213,7 @@
         "distance_km": 34.3,
         "base_score": 46.7,
         "via": "Google Maps observed route",
-        "observations": 7579
+        "observations": 7580
       }
     ],
     "Swami Vivekananda Road Metro Station>Christ University, Hosur Main Road": [
@@ -195,7 +223,7 @@
         "distance_km": 10.5,
         "base_score": 60.0,
         "via": "Google Maps observed route",
-        "observations": 7588
+        "observations": 7589
       }
     ],
     "Benniganahalli Metro Station>Embassy TechVillage, Devarabisanahalli": [
@@ -205,7 +233,7 @@
         "distance_km": 10.0,
         "base_score": 25.0,
         "via": "Google Maps observed route",
-        "observations": 7588
+        "observations": 7589
       }
     ],
     "The Rameshwaram Cafe @ Brookfield>Gawky Goose, Wind Tunnel Rd": [
@@ -215,7 +243,7 @@
         "distance_km": 9.4,
         "base_score": 44.0,
         "via": "Google Maps observed route",
-        "observations": 7588
+        "observations": 7589
       }
     ]
   }

@@ -26,6 +26,7 @@ export type TrafficData = {
     weather_coverage?: string;
   };
   locations: string[];
+  location_states?: Record<string, string>;
   hour_factor: Record<string, number>;
   day_factor: Record<string, number>;
   weather_factor: Record<Weather, number>;

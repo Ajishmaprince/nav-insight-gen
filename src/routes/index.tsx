@@ -74,6 +74,8 @@ function Index() {
   const [advice, setAdvice] = useState<RouteAdvice | null>(null);
   const [thinking, setThinking] = useState(false);
   const [submitted, setSubmitted] = useState<Query | null>(null);
+  const [originState, setOriginState] = useState("Karnataka");
+  const [destinationState, setDestinationState] = useState("Karnataka");
 
   useEffect(() => {
     loadTrafficData()
@@ -81,7 +83,22 @@ function Index() {
       .catch((e: Error) => setLoadError(e.message));
   }, []);
 
-  const destinations = useMemo(() => data?.locations ?? [], [data]);
+  const states = useMemo(
+    () =>
+      Array.from(new Set(Object.values(data?.location_states ?? {}))).sort((a, b) =>
+        a.localeCompare(b),
+      ),
+    [data],
+  );
+  const locationsForState = (state: string) =>
+    (data?.locations ?? []).filter(
+      (location) => (data?.location_states?.[location] ?? "Karnataka") === state,
+    );
+  const origins = useMemo(() => locationsForState(originState), [data, originState]);
+  const destinations = useMemo(
+    () => locationsForState(destinationState),
+    [data, destinationState],
+  );
   const best = routes?.[0] ?? null;
   const recommendedName = advice?.recommendedRoute ?? best?.name ?? null;
 
@@ -148,6 +165,20 @@ function Index() {
       });
       setSaved(error ? "error" : "ok");
     }
+  }
+
+  function changeOriginState(state: string) {
+    const nextOrigin = locationsForState(state)[0] ?? "";
+    setOriginState(state);
+    setForm((current) => ({ ...current, origin: nextOrigin }));
+    setErrors({});
+  }
+
+  function changeDestinationState(state: string) {
+    const nextDestination = locationsForState(state)[0] ?? "";
+    setDestinationState(state);
+    setForm((current) => ({ ...current, destination: nextDestination }));
+    setErrors({});
   }
 
   if (authLoading || !session) {
@@ -240,15 +271,46 @@ function Index() {
               <h3 className="text-base font-medium">Trip details</h3>
 
               <div className="mt-5 space-y-4">
+                <Field label="Origin state">
+                  <select
+                    value={originState}
+                    onChange={(e) => changeOriginState(e.target.value)}
+                    className="field"
+                    disabled={!data}
+                  >
+                    {states.map((state) => (
+                      <option key={state} value={state}>
+                        {state}
+                      </option>
+                    ))}
+                  </select>
+                </Field>
+
                 <Field label="Origin" error={errors.origin}>
                   <select
                     value={form.origin}
                     onChange={(e) => setForm({ ...form, origin: e.target.value })}
                     className="field"
+                    disabled={!data || !origins.length}
                   >
-                    {destinations.map((l) => (
+                    {origins.map((l) => (
                       <option key={l} value={l}>
                         {l}
+                      </option>
+                    ))}
+                  </select>
+                </Field>
+
+                <Field label="Destination state">
+                  <select
+                    value={destinationState}
+                    onChange={(e) => changeDestinationState(e.target.value)}
+                    className="field"
+                    disabled={!data}
+                  >
+                    {states.map((state) => (
+                      <option key={state} value={state}>
+                        {state}
                       </option>
                     ))}
                   </select>
@@ -259,6 +321,7 @@ function Index() {
                     value={form.destination}
                     onChange={(e) => setForm({ ...form, destination: e.target.value })}
                     className="field"
+                    disabled={!data || !destinations.length}
                   >
                     {destinations.map((l) => (
                       <option key={l} value={l}>
