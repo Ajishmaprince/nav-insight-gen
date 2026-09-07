@@ -1,128 +1,222 @@
 {
   "meta": {
-    "source": "Historical traffic volume patterns (adapted) + Bengaluru route split",
-    "model": "RandomForestRegressor -> precomputed prediction table",
+    "source": "Traffic Monitor Lizard — Bengaluru traffic snapshots (Google Maps estimates)",
+    "source_url": "https://github.com/thecont1/traffic-monitor-lizard",
+    "license": "CC BY 4.0",
+    "model": "Observed-duration baseline → route, hour, weekday and rain factors",
+    "version": "2.0.0",
     "generated_by": "scripts/train_export_model.py",
-    "version": "1.0.0",
-    "target": "predicted_traffic_volume (vehicles/hour, normalised 0-100 congestion score)"
+    "target": "congestion score (0–100) from observed duration above route free-flow baseline",
+    "observations": 97818,
+    "routes_observed": 13,
+    "date_range": {
+      "start": "2025-09-25",
+      "end": "2026-09-07"
+    },
+    "weather_coverage": "The source contains clear conditions and rain flags; other weather types are not inferred."
   },
   "locations": [
-    "Koramangala",
-    "Whitefield",
-    "Electronic City",
-    "Kempegowda International Airport",
-    "Indiranagar",
-    "Hebbal",
-    "Yeshwanthpur"
+    "Benniganahalli Metro Station",
+    "Bethel AG Church, Hebbal",
+    "Big Bull Temple, Basavanagudi",
+    "Biocon Campus",
+    "Christ University, Hosur Main Road",
+    "Coles Park, Fraser Town",
+    "Embassy TechVillage, Devarabisanahalli",
+    "Gawky Goose, Wind Tunnel Rd",
+    "Hemavathi Park, HSR Layout",
+    "Jaya Prakash Nagar Metro Station",
+    "Jaya Prakash Narayana Park",
+    "Karmelaram Railway Station, Chikkabellandur",
+    "Kempegowda International Airport, Bengaluru",
+    "Kudlu Gate Metro Station",
+    "Lulu Mall Bengaluru",
+    "MG Road Metro Station",
+    "National Law School of India University",
+    "Nexus Mall Koramangala",
+    "SMVT Railway Station",
+    "Shri Someshwara Swamy Temple, Halasuru",
+    "Sir Puttanna Chetty Town Hall, Bangalore",
+    "St. Francis College, Koramangala",
+    "Swami Vivekananda Road Metro Station",
+    "The Rameshwaram Cafe @ Brookfield",
+    "The Watering Hole, Rajarajeshwari Nagar",
+    "Yelachenahalli Metro Station"
   ],
   "hour_factor": {
-    "0": 0.22,
-    "1": 0.16,
-    "2": 0.13,
-    "3": 0.14,
-    "4": 0.25,
-    "5": 0.45,
-    "6": 0.72,
-    "7": 0.94,
-    "8": 1.0,
-    "9": 0.88,
-    "10": 0.68,
-    "11": 0.66,
-    "12": 0.71,
-    "13": 0.7,
-    "14": 0.69,
-    "15": 0.78,
-    "16": 0.9,
-    "17": 1.0,
-    "18": 0.96,
-    "19": 0.8,
-    "20": 0.62,
-    "21": 0.5,
-    "22": 0.38,
-    "23": 0.29
+    "0": 0.2,
+    "1": 0.083,
+    "2": 0.0,
+    "3": 0.0,
+    "4": 0.0,
+    "5": 0.087,
+    "6": 0.2,
+    "7": 0.667,
+    "8": 1.067,
+    "9": 1.5,
+    "10": 1.6,
+    "11": 1.5,
+    "12": 1.5,
+    "13": 1.44,
+    "14": 1.333,
+    "15": 1.44,
+    "16": 1.6,
+    "17": 1.76,
+    "18": 2.0,
+    "19": 1.833,
+    "20": 1.368,
+    "21": 1.04,
+    "22": 0.72,
+    "23": 0.4
   },
   "day_factor": {
     "0": 1.0,
-    "1": 1.02,
-    "2": 1.03,
-    "3": 1.05,
-    "4": 1.08,
-    "5": 0.74,
-    "6": 0.61
+    "1": 1.12,
+    "2": 1.167,
+    "3": 1.083,
+    "4": 1.083,
+    "5": 0.96,
+    "6": 0.696
   },
   "weather_factor": {
     "clear": 1.0,
-    "clouds": 1.03,
-    "rain": 1.18,
-    "fog": 1.24,
-    "snow": 1.35
+    "rain": 1.333
   },
-  "holiday_factor": 0.68,
-  "thresholds": { "low": 40, "medium": 70 },
+  "holiday_factor": 1,
+  "thresholds": {
+    "low": 40,
+    "medium": 70
+  },
   "routes": {
-    "Koramangala>Kempegowda International Airport": [
-      { "id": "r1", "name": "Bellary Road", "distance_km": 38.2, "base_score": 74, "via": "Hebbal" },
-      { "id": "r2", "name": "Outer Ring Road", "distance_km": 43.6, "base_score": 55, "via": "Nagawara" },
-      { "id": "r3", "name": "Hennur Road", "distance_km": 45.1, "base_score": 38, "via": "Hennur" }
+    "Jaya Prakash Narayana Park>Coles Park, Fraser Town": [
+      {
+        "id": "2HM2+P8|XJV5+RG",
+        "name": "North Inner Ring",
+        "distance_km": 10.6,
+        "base_score": 57.9,
+        "via": "Google Maps observed route",
+        "observations": 7588
+      }
     ],
-    "Koramangala>Whitefield": [
-      { "id": "r1", "name": "Outer Ring Road", "distance_km": 18.4, "base_score": 81, "via": "Marathahalli" },
-      { "id": "r2", "name": "Sarjapur Road", "distance_km": 16.9, "base_score": 58, "via": "HSR Layout" },
-      { "id": "r3", "name": "Old Airport Road", "distance_km": 19.7, "base_score": 44, "via": "Domlur" }
+    "Bethel AG Church, Hebbal>SMVT Railway Station": [
+      {
+        "id": "2HVW+G8|XJXR+WG",
+        "name": "North Outer Ring",
+        "distance_km": 9.7,
+        "base_score": 43.5,
+        "via": "Google Maps observed route",
+        "observations": 7588
+      }
     ],
-    "Koramangala>Electronic City": [
-      { "id": "r1", "name": "Hosur Road", "distance_km": 14.8, "base_score": 69, "via": "Silk Board" },
-      { "id": "r2", "name": "NICE Road", "distance_km": 22.5, "base_score": 47, "via": "Bannerghatta Road" }
+    "Kudlu Gate Metro Station>Biocon Campus": [
+      {
+        "id": "VJRQ+2M|RMJJ+F4",
+        "name": "Hosur Road",
+        "distance_km": 10.4,
+        "base_score": 50.0,
+        "via": "Google Maps observed route",
+        "observations": 7588
+      }
     ],
-    "Koramangala>Hebbal": [
-      { "id": "r1", "name": "Inner Ring Road", "distance_km": 14.2, "base_score": 88, "via": "Indiranagar" },
-      { "id": "r2", "name": "Bellary Road", "distance_km": 16.4, "base_score": 61, "via": "Cantonment" },
-      { "id": "r3", "name": "Jayamahal Road", "distance_km": 15.1, "base_score": 42, "via": "Palace Grounds" }
+    "The Watering Hole, Rajarajeshwari Nagar>Sir Puttanna Chetty Town Hall, Bangalore": [
+      {
+        "id": "WGG8+G5|XH7P+G6",
+        "name": "Mysore Road",
+        "distance_km": 9.9,
+        "base_score": 45.0,
+        "via": "Google Maps observed route",
+        "observations": 7462
+      }
     ],
-    "Kempegowda International Airport>Whitefield": [
-      { "id": "r1", "name": "Airport Road", "distance_km": 39.5, "base_score": 66, "via": "Hebbal" },
-      { "id": "r2", "name": "Outer Ring Road", "distance_km": 42.0, "base_score": 49, "via": "Nagawara" },
-      { "id": "r3", "name": "Hennur-Bagalur Road", "distance_km": 40.8, "base_score": 35, "via": "Hennur" }
+    "Jaya Prakash Nagar Metro Station>Hemavathi Park, HSR Layout": [
+      {
+        "id": "WH5F+26|WJ8X+F5W",
+        "name": "Double Decker Flyover",
+        "distance_km": 10.1,
+        "base_score": 60.0,
+        "via": "Google Maps observed route",
+        "observations": 7588
+      }
     ],
-    "Kempegowda International Airport>Electronic City": [
-      { "id": "r1", "name": "Airport Road + Hosur Road", "distance_km": 55.9, "base_score": 72, "via": "Hebbal" },
-      { "id": "r2", "name": "Peripheral Ring Road", "distance_km": 61.4, "base_score": 51, "via": "Doddaballapur Road" }
+    "Big Bull Temple, Basavanagudi>Shri Someshwara Swamy Temple, Halasuru": [
+      {
+        "id": "WHR9+R6|XJGF+6J",
+        "name": "Central Diagonal 2",
+        "distance_km": 10.2,
+        "base_score": 58.3,
+        "via": "Google Maps observed route",
+        "observations": 7588
+      }
     ],
-    "Kempegowda International Airport>Indiranagar": [
-      { "id": "r1", "name": "Bellary Road + Inner Ring Road", "distance_km": 39.7, "base_score": 58, "via": "Hebbal" },
-      { "id": "r2", "name": "Hennur Road", "distance_km": 37.2, "base_score": 41, "via": "Kalyan Nagar" }
+    "Karmelaram Railway Station, Chikkabellandur>St. Francis College, Koramangala": [
+      {
+        "id": "WP44+W8|WJFH+XQ",
+        "name": "Sarjapur Road",
+        "distance_km": 10.1,
+        "base_score": 41.7,
+        "via": "Google Maps observed route",
+        "observations": 7332
+      }
     ],
-    "Whitefield>Electronic City": [
-      { "id": "r1", "name": "Outer Ring Road + Hosur Road", "distance_km": 34.6, "base_score": 63, "via": "Marathahalli" },
-      { "id": "r2", "name": "Sarjapur Road", "distance_km": 31.1, "base_score": 45, "via": "Carmelaram" }
+    "National Law School of India University>Yelachenahalli Metro Station": [
+      {
+        "id": "XG48+2W|VHWC+C3",
+        "name": "South Outer Ring",
+        "distance_km": 10.6,
+        "base_score": 65.0,
+        "via": "Google Maps observed route",
+        "observations": 7153
+      }
     ],
-    "Whitefield>Hebbal": [
-      { "id": "r1", "name": "Outer Ring Road", "distance_km": 26.9, "base_score": 79, "via": "Mahadevapura" },
-      { "id": "r2", "name": "Old Airport Road", "distance_km": 29.3, "base_score": 52, "via": "Domlur" }
+    "Lulu Mall Bengaluru>Nexus Mall Koramangala": [
+      {
+        "id": "XHJ7+MG|WJM6+VC",
+        "name": "Central Diagonal 1",
+        "distance_km": 10.6,
+        "base_score": 54.2,
+        "via": "Google Maps observed route",
+        "observations": 7588
+      }
     ],
-    "Electronic City>Hebbal": [
-      { "id": "r1", "name": "NICE Road + Tumakuru Road", "distance_km": 38.9, "base_score": 76, "via": "Goraguntepalya" },
-      { "id": "r2", "name": "Inner Ring Road", "distance_km": 36.8, "base_score": 48, "via": "Indiranagar" }
+    "MG Road Metro Station>Kempegowda International Airport, Bengaluru": [
+      {
+        "id": "XJG4+7J|5PX4+HQ",
+        "name": "Airport Expy",
+        "distance_km": 34.3,
+        "base_score": 46.7,
+        "via": "Google Maps observed route",
+        "observations": 7579
+      }
     ],
-    "Indiranagar>Koramangala": [
-      { "id": "r1", "name": "Intermediate Ring Road", "distance_km": 6.3, "base_score": 71, "via": "Domlur" },
-      { "id": "r2", "name": "100 Feet Road", "distance_km": 7.4, "base_score": 46, "via": "Ejipura" }
+    "Swami Vivekananda Road Metro Station>Christ University, Hosur Main Road": [
+      {
+        "id": "XJPW+92|WJP4+FF",
+        "name": "East Inner Ring",
+        "distance_km": 10.5,
+        "base_score": 60.0,
+        "via": "Google Maps observed route",
+        "observations": 7588
+      }
     ],
-    "Indiranagar>Whitefield": [
-      { "id": "r1", "name": "Old Airport Road", "distance_km": 16.1, "base_score": 64, "via": "Marathahalli" },
-      { "id": "r2", "name": "Outer Ring Road", "distance_km": 18.0, "base_score": 43, "via": "Kundalahalli" }
+    "Benniganahalli Metro Station>Embassy TechVillage, Devarabisanahalli": [
+      {
+        "id": "XMW9+G8|WMJR+V4",
+        "name": "East Outer Ring",
+        "distance_km": 10.0,
+        "base_score": 25.0,
+        "via": "Google Maps observed route",
+        "observations": 7588
+      }
     ],
-    "Yeshwanthpur>Koramangala": [
-      { "id": "r1", "name": "Tumakuru Road + NICE Road", "distance_km": 19.8, "base_score": 83, "via": "Goraguntepalya" },
-      { "id": "r2", "name": "Chord Road", "distance_km": 16.6, "base_score": 49, "via": "Vijayanagar" }
-    ],
-    "Yeshwanthpur>Kempegowda International Airport": [
-      { "id": "r1", "name": "Tumakuru Road + Bellary Road", "distance_km": 34.3, "base_score": 52, "via": "Hebbal" },
-      { "id": "r2", "name": "Outer Ring Road", "distance_km": 37.0, "base_score": 70, "via": "Nagawara" }
-    ],
-    "Hebbal>Kempegowda International Airport": [
-      { "id": "r1", "name": "Bellary Road", "distance_km": 27.6, "base_score": 68, "via": "Yelahanka" },
-      { "id": "r2", "name": "Airport Road", "distance_km": 30.2, "base_score": 44, "via": "Jakkur" }
+    "The Rameshwaram Cafe @ Brookfield>Gawky Goose, Wind Tunnel Rd": [
+      {
+        "id": "XPC7+72|XM33+J3",
+        "name": "Old Airport Road",
+        "distance_km": 9.4,
+        "base_score": 44.0,
+        "via": "Google Maps observed route",
+        "observations": 7588
+      }
     ]
   }
 }
