@@ -62,8 +62,8 @@ function Index() {
   const [data, setData] = useState<TrafficData | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [form, setForm] = useState<Query>({
-    origin: "Koramangala",
-    destination: "Whitefield",
+    origin: "MG Road Metro Station",
+    destination: "Kempegowda International Airport, Bengaluru",
     time: "08:30",
     date: todayISO(),
     weather: "clear",
