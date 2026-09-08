@@ -19,6 +19,7 @@ import {
   type ScoredRoute,
   type TrafficData,
   type Weather,
+  INDIAN_STATES_AND_UTS,
 } from "@/lib/traffic";
 
 export const Route = createFileRoute("/")({
@@ -83,13 +84,7 @@ function Index() {
       .catch((e: Error) => setLoadError(e.message));
   }, []);
 
-  const states = useMemo(
-    () =>
-      Array.from(new Set(Object.values(data?.location_states ?? {}))).sort((a, b) =>
-        a.localeCompare(b),
-      ),
-    [data],
-  );
+  const states = INDIAN_STATES_AND_UTS;
   const locationsForState = (state: string) =>
     (data?.locations ?? []).filter(
       (location) => (data?.location_states?.[location] ?? "Karnataka") === state,
@@ -281,6 +276,7 @@ function Index() {
                     {states.map((state) => (
                       <option key={state} value={state}>
                         {state}
+                        {data && !locationsForState(state).length ? " — no modeled places yet" : ""}
                       </option>
                     ))}
                   </select>
@@ -293,6 +289,9 @@ function Index() {
                     className="field"
                     disabled={!data || !origins.length}
                   >
+                    <option value="" disabled>
+                      {origins.length ? "Select an origin" : "No modeled places in this state"}
+                    </option>
                     {origins.map((l) => (
                       <option key={l} value={l}>
                         {l}
@@ -311,6 +310,7 @@ function Index() {
                     {states.map((state) => (
                       <option key={state} value={state}>
                         {state}
+                        {data && !locationsForState(state).length ? " — no modeled places yet" : ""}
                       </option>
                     ))}
                   </select>
@@ -323,6 +323,11 @@ function Index() {
                     className="field"
                     disabled={!data || !destinations.length}
                   >
+                    <option value="" disabled>
+                      {destinations.length
+                        ? "Select a destination"
+                        : "No modeled places in this state"}
+                    </option>
                     {destinations.map((l) => (
                       <option key={l} value={l}>
                         {l}
@@ -384,6 +389,12 @@ function Index() {
               </button>
 
               {loadError && <p className="mt-3 text-xs text-destructive">{loadError}</p>}
+              {data && (!origins.length || !destinations.length) && (
+                <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
+                  The current observed traffic dataset covers Bengaluru, Karnataka. Other states
+                  are ready to select as more real traffic sources are added.
+                </p>
+              )}
               {data && (
                 <p className="mt-4 border-t border-border pt-4 text-[11px] leading-relaxed text-muted-foreground">
                   Model {data.meta.version} · {data.meta.model}
